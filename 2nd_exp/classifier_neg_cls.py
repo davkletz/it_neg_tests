@@ -65,13 +65,16 @@ for sent_list in [sent_neg, sent_pos]:
   with torch.no_grad():
     tokens_outputs = model(**batch_encoded )
 
-  cls_encodings = tokens_outputs.last_hidden_state[:,0,:]
-  cls_encodings = cls_encodings_pos.cpu().numpy()
+  cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
   if sent_list == sent_neg:
     cls_encodings_neg = cls_encodings
   elif sent_list == sent_pos:
     cls_encodings_pos = cls_encodings
+
+  #cls_encodings = cls_encodings_pos.cpu().numpy()
+
+
 
 train = cls_encodings_neg[:9000]
 train = train.append(cls_encodings_pos[:9000])
