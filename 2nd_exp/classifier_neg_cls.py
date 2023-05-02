@@ -95,7 +95,7 @@ labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
 
 #test_lab = np.empty(2000)
 #test_lab = np.where(test_lab[:1000], 0, 1)
-labels = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
+test_lab = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
 
 
 #scaler = StandardScaler()
