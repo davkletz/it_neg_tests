@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import re
-
+from random import shuffle
 
 size_test = 100
 
@@ -41,7 +41,7 @@ for text in paisa_wiki:
   for elem in  found:
     if len(elem) > 25:
       sent.append(elem)
-  if len(sent)> 100:
+  if len(sent)> size_test*10:
     break
 
 #print(f"Number of sentences: {len(sent)}")
@@ -60,6 +60,15 @@ for s in sent:
     sent_neg.append(s)
   else:
     sent_pos.append(s)
+
+
+size_test = min(size_test, len(sent_neg), len(sent_pos))
+
+shuffle(sent_neg)
+shuffle(sent_pos)
+
+sent_neg = sent_neg[:size_test]
+sent_pos = sent_pos[:size_test]
 
 
 for sent_list in [sent_neg, sent_pos]:
@@ -87,6 +96,7 @@ for sent_list in [sent_neg, sent_pos]:
 train_size = round(size_test*0.9)
 test_size = size_test - train_size
 
+print(len(cls_encodings_pos[:train_size]))
 train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
 test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
 #test = cls_encodings_pos[9000:]
