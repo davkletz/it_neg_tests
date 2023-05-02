@@ -112,6 +112,9 @@ test_lab = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
 
 print(train)
 print(labels)
+
+print(len(train))
+print(len(labels))
 X = train
 y = labels
 
