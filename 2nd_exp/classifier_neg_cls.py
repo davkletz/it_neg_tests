@@ -109,17 +109,17 @@ test_size = int(size_test - train_size)
 test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 
 
-#scaler = StandardScaler()
+scaler = StandardScaler()
 #scaler.fit(dati.values)
 #dati_scaled = scaler.transform(dati.values)
 
-#scaler.fit(train)
-#dati_scaled = scaler.transform(train)
+scaler.fit(train)
+dati_scaled = scaler.transform(train)
 
 
-#train = dati_scaled
+train = dati_scaled
 #labels = df["class"].values
-
+test = scaler.transform(test)
 
 #print(test)
 #print(test_lab)
