@@ -98,17 +98,20 @@ labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
 labels = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
 
 
-scaler = StandardScaler()
+#scaler = StandardScaler()
 #scaler.fit(dati.values)
 #dati_scaled = scaler.transform(dati.values)
 
-scaler.fit(train)
-dati_scaled = scaler.transform(train)
+#scaler.fit(train)
+#dati_scaled = scaler.transform(train)
 
 
-train = dati_scaled
+#train = dati_scaled
 #labels = df["class"].values
 
+
+print(train)
+print(labels)
 X = train
 y = labels
 
