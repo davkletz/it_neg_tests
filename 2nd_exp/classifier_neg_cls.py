@@ -96,8 +96,7 @@ for sent_list in [sent_neg, sent_pos]:
 train_size = round(size_test*0.9)
 test_size = size_test - train_size
 
-print(len(cls_encodings_pos[train_size:]))
-print(test_size)
+
 train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
 test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
 #test = cls_encodings_pos[9000:]
@@ -121,11 +120,11 @@ test_lab = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
 #labels = df["class"].values
 
 
-print(train)
-print(labels)
+print(test)
+print(test_lab)
 
-print(len(train))
-print(len(labels))
+print(len(test))
+print(len(test_lab))
 X = train
 y = labels
 
