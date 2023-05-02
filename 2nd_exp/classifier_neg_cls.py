@@ -94,7 +94,7 @@ for sent_list in [sent_neg, sent_pos]:
 
 
 train_size = round(size_test*0.9)
-test_size = size_test - train_size
+
 
 
 train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
@@ -105,7 +105,8 @@ labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
 
 #test_lab = np.empty(2000)
 #test_lab = np.where(test_lab[:1000], 0, 1)
-test_lab = np.concatenate((np.zeros(len(test)/2), np.ones(len(test)/2)))
+test_size = int(size_test - train_size)
+test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 
 
 #scaler = StandardScaler()
