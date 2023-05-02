@@ -19,7 +19,7 @@ from sklearn.preprocessing import StandardScaler
 import re
 from random import shuffle
 
-size_test = 100
+size_test = 10000
 
 model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased') # automodel for masked LM perché automodel e basta crea solo i vettori, gli embedding, per la frase; per LM invece ricava anche le prob di ogni parola nel vocab, ossia fa il language model
 tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
@@ -41,7 +41,7 @@ for text in paisa_wiki:
   for elem in  found:
     if len(elem) > 25:
       sent.append(elem)
-  if len(sent)> size_test*10:
+  if len(sent)> size_test*100:
     break
 
 #print(f"Number of sentences: {len(sent)}")
@@ -121,11 +121,11 @@ test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 #labels = df["class"].values
 
 
-print(test)
-print(test_lab)
+#print(test)
+#print(test_lab)
 
-print(len(test))
-print(len(test_lab))
+#print(len(test))
+#print(len(test_lab))
 X = train
 y = labels
 
