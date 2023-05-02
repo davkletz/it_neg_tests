@@ -18,6 +18,9 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import re
 
+
+size_test = 100
+
 model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased') # automodel for masked LM perché automodel e basta crea solo i vettori, gli embedding, per la frase; per LM invece ricava anche le prob di ogni parola nel vocab, ossia fa il language model
 tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
@@ -67,26 +70,33 @@ for sent_list in [sent_neg, sent_pos]:
 
   cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
+  cls_encodings = cls_encodings.cpu().numpy()
+
   if sent_list == sent_neg:
     cls_encodings_neg = cls_encodings
   elif sent_list == sent_pos:
     cls_encodings_pos = cls_encodings
 
-  #cls_encodings = cls_encodings_pos.cpu().numpy()
 
 
 #train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
 #train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
 #train = train.append(cls_encodings_pos[:9000])
 
-train = torch.cat((cls_encodings_pos[:9000], cls_encodings_neg[:9000]), 0)
-test = torch.cat((cls_encodings_pos[9000:], cls_encodings_neg[9000:]), 0)
+
+train_size = round(size_test*0.9)
+test_size = size_test - train_size
+
+train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
+test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
 #test = cls_encodings_pos[9000:]
 #test = test.append(cls_encodings_neg[9000:])
-labels = np.empty(18000)
-labels = np.where(labels[:9000], 1, 0)
-test_lab = np.empty(2000)
-test_lab = np.where(test_lab[:1000], 0, 1)
+labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
+
+#test_lab = np.empty(2000)
+#test_lab = np.where(test_lab[:1000], 0, 1)
+labels = np.concatenate((np.zeros(len(test)), np.ones(len(test))))
+
 
 scaler = StandardScaler()
 #scaler.fit(dati.values)
