@@ -63,9 +63,9 @@ for sent_list in [sent_neg, sent_pos]:
   batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt")
 
   with torch.no_grad():
-    tokens_outputs = model(**batch_encoded)
+    tokens_outputs = model(**batch_encoded )
 
-  cls_encodings = tokens_outputs.last_hidden_states[:,0,:]
+  cls_encodings = tokens_outputs.last_hidden_state[:,0,:]
   cls_encodings = cls_encodings_pos.cpu().numpy()
 
   if sent_list == sent_neg:
