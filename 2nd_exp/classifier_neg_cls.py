@@ -75,9 +75,11 @@ for sent_list in [sent_neg, sent_pos]:
   #cls_encodings = cls_encodings_pos.cpu().numpy()
 
 
+#train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
+#train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
+#train = train.append(cls_encodings_pos[:9000])
 
-train = cls_encodings_neg[:9000]
-train = train.append(cls_encodings_pos[:9000])
+train = torch.cat((cls_encodings_pos, cls_encodings_neg), 0)
 test = cls_encodings_pos[9000:]
 test = test.append(cls_encodings_neg[9000:])
 labels = np.empty(18000)
