@@ -18,14 +18,22 @@ import pandas as pd
 from sklearn.preprocessing import StandardScaler
 import re
 from random import shuffle
+import sys
+from sklearn.model_selection import train_test_split
 
-size_test = 10000
+
+
+try :
+  size_test = int(sys.argv[1])
+except:
+  size_test = 10000
 
 model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased') # automodel for masked LM perché automodel e basta crea solo i vettori, gli embedding, per la frase; per LM invece ricava anche le prob di ogni parola nel vocab, ossia fa il language model
 tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
 with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
     paisa = infile.read()
+
 
 wiki_pattern = r"<text.*wiki.*(?:\n.*)+?\n</text>\n" # finds all texts containing "wiki" in their tag's url
 paisa_wiki = re.findall(wiki_pattern, paisa)
