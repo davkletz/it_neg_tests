@@ -125,9 +125,9 @@ scaler.fit(train)
 dati_scaled = scaler.transform(train)
 
 
-train = dati_scaled
+#train = dati_scaled
 #labels = df["class"].values
-test = scaler.transform(test)
+#test = scaler.transform(test)
 
 #print(test)
 #print(test_lab)
