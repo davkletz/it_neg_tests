@@ -47,12 +47,12 @@ def main():
     # load x richiamare
 
     #for model_name in ["dbmdz/bert-base-italian-cased", "bert-base-multilingual-cased",
-    #                   "m-polignano-uniba/bert_uncased_L-12_H-768_A-12_italian_alb3rt0"]:
-    for model_name in ["Musixmatch/umberto-commoncrawl-cased-v1"]:
+    #                   "m-polignano-uniba/bert_uncased_L-12_H-768_A-12_italian_alb3rt0", "Musixmatch/umberto-commoncrawl-cased-v1"]:
+    for model_name in ["dbmdz/bert-base-italian-xxl-cased"]:
 
         seed(42)
 
-        if model_name in ["dbmdz/bert-base-italian-cased"]:
+        if model_name in ["dbmdz/bert-base-italian-cased", "dbmdz/bert-base-italian-xxl-cased"]:
             list_verbs = load(f"{path}\base_verbs.joblib")
 
         elif model_name in ["bert-base-multilingual-cased"]: # joblib
@@ -64,6 +64,9 @@ def main():
 
         elif model_name in ["Musixmatch/umberto-commoncrawl-cased-v1"]: #joblib
             list_verbs = load(f"{path}/umberto_verbs.joblib")
+
+        elif model_name in ["dbmdz/bert-base-italian-xxl-cased"]:
+            list_verbs = load(f"{path}/base_verbs.joblib")
 
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         model = AutoModelForMaskedLM.from_pretrained(model_name)

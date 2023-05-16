@@ -33,11 +33,12 @@ for text in paisa_wiki:
 
 
 
-
 sent_pos = []
 sent_neg = []
 
 neg_patt = r"\b[Nn]on\b"  # finds the negation in a sentence
+
+#["anche", "suo", "con", "venire"]
 
 for s in sent:
   matches = re.search(neg_patt, s)

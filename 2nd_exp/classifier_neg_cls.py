@@ -28,6 +28,8 @@ try :
 except:
   size_test = 10000
 
+
+
 model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased') # automodel for masked LM perché automodel e basta crea solo i vettori, gli embedding, per la frase; per LM invece ricava anche le prob di ogni parola nel vocab, ossia fa il language model
 tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
@@ -60,7 +62,16 @@ for text in paisa_wiki:
 sent_pos = []
 sent_neg = []
 
-neg_patt = r"\b[Nn]on\b"  # finds the negation in a sentence
+
+neg_patt = sys.argv[2]
+maj = neg_patt[0].upper()
+neg_patt = r"\b" + "[" + maj + neg_patt[0] + "]" + neg_patt[1:] +  r"\b"  # finds the negation in a sentence
+print(neg_patt)
+
+matches = re.search(neg_patt, "Anche oggi dobbiamo studiare")
+print(matches)
+
+#neg_patt = r"\b[Nn]on\b"  # finds the negation in a sentence
 
 for s in sent:
   matches = re.search(neg_patt, s)
@@ -77,6 +88,9 @@ shuffle(sent_pos)
 
 sent_neg = sent_neg[:size_test]
 sent_pos = sent_pos[:size_test]
+
+
+print(len(sent_neg))
 
 
 for sent_list in [sent_neg, sent_pos]:
