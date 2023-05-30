@@ -1,6 +1,6 @@
 import os
 
-os.environ['CUDA_VISIBLE_DEVICES'] = "2" # usa una sola GPU, la num 1 (0,1); da mettere prim di import torch
+os.environ['CUDA_VISIBLE_DEVICES'] = "1" # usa una sola GPU, la num 1 (0,1); da mettere prim di import torch
 from joblib import load, dump # x salvare e recuperare roba da e su cartelle, vd dump
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 import torch # lib x mod ML, calcoli su vettor/tensori
@@ -48,12 +48,13 @@ def main():
 
     #for model_name in ["dbmdz/bert-base-italian-cased", "bert-base-multilingual-cased",
     #                   "m-polignano-uniba/bert_uncased_L-12_H-768_A-12_italian_alb3rt0", "Musixmatch/umberto-commoncrawl-cased-v1"]:
-    for model_name in ["dbmdz/bert-base-italian-xxl-cased"]:
+    #for model_name in ["dbmdz/bert-base-italian-xxl-cased"]:
+    for model_name in ["Musixmatch/umberto-commoncrawl-cased-v1"]:
 
         seed(42)
 
         if model_name in ["dbmdz/bert-base-italian-cased", "dbmdz/bert-base-italian-xxl-cased"]:
-            list_verbs = load(f"{path}\base_verbs.joblib")
+            list_verbs = load(f"{path}/base_verbs.joblib")
 
         elif model_name in ["bert-base-multilingual-cased"]: # joblib
             list_verbs = load(f"{path}\multilg_verbs.joblib")

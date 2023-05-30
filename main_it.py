@@ -1,5 +1,5 @@
 import os
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+os.environ['CUDA_VISIBLE_DEVICES'] = "1"
 from transformers import AutoTokenizer, AutoModelForMaskedLM
 import torch
 from tools.build_array import build_array, build_hypo, build_masked_sentences, build_masked_context
@@ -16,7 +16,7 @@ import sys
 
 
 #path_sentences = "/home/dkletz/tmp/pycharm_project_99/2022-23/neg-eval-set/evaluation_script/Inputs"
-path_sentences = "/home/dkletz/tmp/pycharm_project_99/stages/viola/Inputs"
+path_sentences = "/home/dkletz/tmp/pycharm_project_99/stages/viola/it_neg_tests/Inputs"
 ## verificare solo cosa sostituisce al mask se non metto il contesto
 dico_base_n = {"dbmdz/bert-base-italian-cased" : {"Lui" : "dorme", "Lei" : "dorme"},
             "bert-base-multilingual-cased" : {"Lui" : "è", "Lei" : "è"},
@@ -34,6 +34,7 @@ dico_base_p = {"dbmdz/bert-base-italian-cased" : {"Lui" : "lavora", "Lei" : "lav
 def main():
     #for model_name in ["dbmdz/bert-base-italian-cased", "bert-base-multilingual-cased",
     #                   "m-polignano-uniba/bert_uncased_L-12_H-768_A-12_italian_alb3rt0"]:
+    #for model_name in ["dbmdz/bert-base-italian-xxl-cased"]:
     for model_name in ["Musixmatch/umberto-commoncrawl-cased-v1"]:
 
         seed(42)

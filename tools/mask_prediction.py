@@ -1,5 +1,9 @@
 import torch
-from tools.chech_conjug import check_conjugation
+try:
+    from chech_conjug import check_conjugation
+except:
+    from tools.chech_conjug import check_conjugation
+
 
 def mask_prediction(sentence_available, tokenizer, model, device, conj_act_token_id):
     encoded_sentence = tokenizer.encode(sentence_available, return_tensors="pt").to(device)
