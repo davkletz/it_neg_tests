@@ -268,7 +268,7 @@ mName_file = open(mName_file_path, "r")
 fProf_file = open(fProf_file_path, "r")
 mProf_file = open(mProf_file_path, "r")
 
-list_verbs = load(f"{path}\base_verbs.joblib")
+list_verbs = load(f"{path}/base_verbs.joblib")
 
 # dictionaries of names, professions and pronouns indexed by gender for template construction
 professionsarray = {"f": build_array(fProf_file),
