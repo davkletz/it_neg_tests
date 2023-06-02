@@ -255,6 +255,8 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased')
 
+model_mask = model_mask.to(device)
+
 # load names, professions and verbs for the templates
 path = r"../Inputs"
 fName_file_path = f"{path}/100_names_f.txt"
