@@ -92,6 +92,7 @@ def make_and_encode_batch(current_batch, tokenizer, model, device, batch_verbs, 
     detail_verbs = []
 
     # get the predicted tokens for the batch of sentences
+    print(current_batch)
     predictions = encode_batch(current_batch, tokenizer, model, device)
     new_sentence = None
 
