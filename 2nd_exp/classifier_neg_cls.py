@@ -232,7 +232,7 @@ for gender in ["f", "m"]:
                 batch_verbs.append(verb_available)
                 total_sentences += 1
 
-                if total_sentences > 100 == 0:
+                if total_sentences > 100 :
                     break
 
                 if total_sentences % 1000 == 0:
