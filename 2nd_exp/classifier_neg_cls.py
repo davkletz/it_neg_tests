@@ -23,7 +23,7 @@ from mlconjug3 import Conjugator
 ### useful functions ###
 ########################
 
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 conjugator = Conjugator(language="it") # così usa l'italiano
 
