@@ -149,15 +149,22 @@ def encode_batch(current_batch, tokenizer, model, device):
     return predicted_tokens
 
 
-###########################
-### masked template set ###
-###########################
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased')
 
 model_mask = model_mask.to(device)
+
+
+# select the italian model to test
+model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased')
+tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
+
+###########################
+### masked template set ###
+###########################
 
 # load names, professions and verbs for the templates
 path = r"../Inputs"
@@ -331,9 +338,6 @@ test_2 = scaler.transform(test_temp)
 
 size_test = 10000
 
-# select the italian model to test
-model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased')
-tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
 # upload the Italian corpus
 with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
