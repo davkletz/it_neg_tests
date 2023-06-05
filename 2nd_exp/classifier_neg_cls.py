@@ -92,13 +92,15 @@ def make_and_encode_batch(current_batch, tokenizer, model, device, batch_verbs, 
     detail_verbs = []
 
     # get the predicted tokens for the batch of sentences
-    print(current_batch)
+
     predictions = encode_batch(current_batch, tokenizer, model, device)
     new_sentence = None
 
     # for each prediction, check if the model predicted the same verb that was in the context sentence
     for i, prediction_available in enumerate(predictions):
         good_verb = batch_verbs[i]  # the desired verb
+        print(good_verb)
+        print(prediction_available)
 
         if check_conjugation(good_verb, prediction_available):
             # outputs True value if the prediction is the 3rd person plural of the desired verb
