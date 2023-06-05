@@ -213,24 +213,32 @@ shuffle(sent_pos)
 sent_neg = sent_neg[:size_test]
 sent_pos = sent_pos[:size_test]
 
+size_batch = 8
+
 ### extract CLS
 # for each set of sentences, we encode each sentence
+cls_encodings_neg = []
+cls_encodings_pos = []
 for sent_list in [sent_neg, sent_pos]:
-    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+    print(len(sent_list))
+    nb_batch = len(sent_list) // size_batch
+    for k in range(nb_batch):
+        current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
+        batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
 
-    # then extract only the outputs for each sentence
-    with torch.no_grad():
-        tokens_outputs = model(**batch_encoded)
+        # then extract only the outputs for each sentence
+        with torch.no_grad():
+            tokens_outputs = model(**batch_encoded)
 
-    # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
-    cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+        # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
+        cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
-    cls_encodings = cls_encodings.cpu().numpy()
+        cls_encodings = cls_encodings.cpu().numpy()
 
-    if sent_list == sent_neg:
-        cls_encodings_neg = cls_encodings
-    elif sent_list == sent_pos:
-        cls_encodings_pos = cls_encodings
+        if sent_list == sent_neg:
+            cls_encodings_neg.append(cls_encodings)
+        elif sent_list == sent_pos:
+            cls_encodings_pos.append(cls_encodings)
 
 # train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
 # train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
