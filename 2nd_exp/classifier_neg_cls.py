@@ -55,6 +55,7 @@ def check_conjugation(verb, conjugation):
     return (('Indicativo', 'Indicativo presente', '3s', conjugation) in verb_conjs)
 
 
+
 def build_masked_context(name_available, profession_available, verb, current_pronouns_maj, mask_token):
     #if verb[0] in ['a', 'e', 'i', 'o', 'u', 'h', "é", "è", "ê", "à", "â", "ô", "î", "ï", "û", "ù", "ü", "y"]:
     #    context_available = "NOM est MET qui a l'habitude d'ACTION. PRON_maj MASK vraiment souvent."
