@@ -265,18 +265,18 @@ model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased
 
 # load names, professions and verbs for the templates
 path = r"../Inputs"
-fName_file_path = f"{path}\100_names_f.txt"
-mName_file_path = f"{path}\100_names_m.txt"
-fProf_file_path = f"{path}\100_mestieri_f.txt"
-mProf_file_path = f"{path}\100_mestieri_m.txt"
-hypo_file_path = f"{path}\frasi_it.txt"
+fName_file_path = f"{path}/100_names_f.txt"
+mName_file_path = f"{path}/100_names_m.txt"
+fProf_file_path = f"{path}/100_mestieri_f.txt"
+mProf_file_path = f"{path}/100_mestieri_m.txt"
+hypo_file_path = f"{path}/frasi_it.txt"
 
 fName_file = open(fName_file_path, "r")
 mName_file = open(mName_file_path, "r")
 fProf_file = open(fProf_file_path, "r")
 mProf_file = open(mProf_file_path, "r")
 
-list_verbs = load(f"{path}\base_verbs.joblib")
+list_verbs = load(f"{path}/base_verbs.joblib")
 
 # dictionaries of names, professions and pronouns indexed by gender for template construction
 professionsarray = {"f": build_array(fProf_file),
