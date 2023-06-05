@@ -88,6 +88,12 @@ def build_array(sourcefile):
     return array_in_construction
 
 
+
+########################
+### useful functions ###
+########################
+
+
 def make_and_encode_batch(current_batch, tokenizer, model, device, batch_verbs, name_available, profession_available,
                           current_pronouns_maj, found):
     current_found = found  # true if the current batch contained good sentences
@@ -95,19 +101,14 @@ def make_and_encode_batch(current_batch, tokenizer, model, device, batch_verbs, 
     detail_verbs = []
 
     # get the predicted tokens for the batch of sentences
-
     predictions = encode_batch(current_batch, tokenizer, model, device)
     new_sentence = None
 
     # for each prediction, check if the model predicted the same verb that was in the context sentence
     for i, prediction_available in enumerate(predictions):
         good_verb = batch_verbs[i]  # the desired verb
-        #print('\n')
-        #print(good_verb)
-        #print(prediction_available)
 
         if check_conjugation(good_verb, prediction_available):
-            #print('ok')
             # outputs True value if the prediction is the 3rd person plural of the desired verb
             detail_verbs.append(good_verb)
             good_pred += 1
@@ -153,37 +154,129 @@ def encode_batch(current_batch, tokenizer, model, device):
     return predicted_tokens
 
 
+##############################
+### paisa "non" extraction ###
+##############################
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased')
-
-model_mask = model_mask.to(device)
-
+size_test = 10000
 
 # select the italian model to test
 model = AutoModel.from_pretrained('dbmdz/bert-base-italian-cased')
 tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
+# upload the Italian corpus
+with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
+    paisa = infile.read()
+
+# from the corpus, select all texts containing "wiki" in their tag's url
+wiki_pattern = r"<text.*wiki.*(?:\n.*)+?\n</text>\n"
+paisa_wiki = re.findall(wiki_pattern, paisa)
+# print(f"Number of texts from a site containing 'wiki' in their URL: {len(paisa_wiki)}")
+
+
+# pattern for finding whole sentences in the texts (defined by the capital letter in the beginning, the period at the end and a minimum length)
+sent = []
+pattern = r" [A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b"  # finds kind of acceptable sentences
+
+for text in paisa_wiki:
+    found = re.findall(pattern, text)
+    for elem in found:
+        if len(elem) > 25:
+            sent.append(elem)
+    if len(sent) > size_test * 100:
+        break
+
+# print(f"Number of sentences: {len(sent)}")
+
+
+# splitting the sentences above into two lists:
+sent_pos = []
+sent_neg = []
+
+# pattern to find the negation in a sentence
+neg_patt = r"\b[Nn]on\b"
+
+for s in sent:
+    matches = re.search(neg_patt, s)
+    if matches:
+        sent_neg.append(s)
+    else:
+        sent_pos.append(s)
+
+size_test = min(size_test, len(sent_neg), len(sent_pos))
+
+shuffle(sent_neg)
+shuffle(sent_pos)
+
+# select a fixed numb of sentences to test
+sent_neg = sent_neg[:size_test]
+sent_pos = sent_pos[:size_test]
+
+### extract CLS
+# for each set of sentences, we encode each sentence
+for sent_list in [sent_neg, sent_pos]:
+    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt")
+
+    # then extract only the outputs for each sentence
+    with torch.no_grad():
+        tokens_outputs = model(**batch_encoded)
+
+    # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
+    cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+
+    cls_encodings = cls_encodings.cpu().numpy()
+
+    if sent_list == sent_neg:
+        cls_encodings_neg = cls_encodings
+    elif sent_list == sent_pos:
+        cls_encodings_pos = cls_encodings
+
+# train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
+# train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
+# train = train.append(cls_encodings_pos[:9000])
+
+# we use 90% of data as training and 10% as test
+train_size = round(size_test * 0.9)
+train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
+labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
+test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
+test_size = int(size_test - train_size)
+test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
+
+# data normalization
+scaler = StandardScaler()
+scaler.fit(train)
+dati_scaled = scaler.transform(train)
+
+X = dati_scaled
+test = scaler.transform(test)
+# print(test)
+# print(test_lab)
+
+y = labels
+
 ###########################
 ### masked template set ###
 ###########################
 
+
+model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased')
+
 # load names, professions and verbs for the templates
 path = r"../Inputs"
-fName_file_path = f"{path}/100_names_f.txt"
-mName_file_path = f"{path}/100_names_m.txt"
-fProf_file_path = f"{path}/100_mestieri_f.txt"
-mProf_file_path = f"{path}/100_mestieri_m.txt"
-hypo_file_path = f"{path}/frasi_it.txt"
+fName_file_path = f"{path}\100_names_f.txt"
+mName_file_path = f"{path}\100_names_m.txt"
+fProf_file_path = f"{path}\100_mestieri_f.txt"
+mProf_file_path = f"{path}\100_mestieri_m.txt"
+hypo_file_path = f"{path}\frasi_it.txt"
 
 fName_file = open(fName_file_path, "r")
 mName_file = open(mName_file_path, "r")
 fProf_file = open(fProf_file_path, "r")
 mProf_file = open(mProf_file_path, "r")
 
-list_verbs = load(f"{path}/base_verbs.joblib")
+list_verbs = load(f"{path}\base_verbs.joblib")
 
 # dictionaries of names, professions and pronouns indexed by gender for template construction
 professionsarray = {"f": build_array(fProf_file),
@@ -231,9 +324,6 @@ for gender in ["f", "m"]:
                 batch_sentences.append(current_sentence)
                 batch_verbs.append(verb_available)
                 total_sentences += 1
-
-                if total_sentences > 100 :
-                    break
 
                 if total_sentences % 1000 == 0:
                     print(f"current : {total_sentences}, {len(list_good_patterns_model)}")
@@ -312,9 +402,6 @@ cls_temp_pos.shuffle()
 cls_temp_pos = cls_temp_pos[:size_test]
 cls_temp_neg = cls_temp_neg[:size_test]
 
-
-
-
 ############################
 ### masked template test ###
 ############################
@@ -328,116 +415,6 @@ test_temp_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 scaler.fit(train_temp)
 train = scaler.transform(train_temp)
 test_2 = scaler.transform(test_temp)
-
-
-
-
-
-
-
-
-
-
-##############################
-### paisa "non" extraction ###
-##############################
-
-
-size_test = 10000
-
-
-# upload the Italian corpus
-with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
-    paisa = infile.read()
-
-# from the corpus, select all texts containing "wiki" in their tag's url
-wiki_pattern = r"<text.*wiki.*(?:\n.*)+?\n</text>\n"
-paisa_wiki = re.findall(wiki_pattern, paisa)
-# print(f"Number of texts from a site containing 'wiki' in their URL: {len(paisa_wiki)}")
-
-
-# pattern for finding whole sentences in the texts (defined by the capital letter in the beginning, the period at the end and a minimum length)
-sent = []
-pattern = r" [A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b"  # finds kind of acceptable sentences
-
-for text in paisa_wiki:
-    found = re.findall(pattern, text)
-    for elem in found:
-        if len(elem) > 25:
-            sent.append(elem)
-    if len(sent) > size_test * 100:
-        break
-
-print(f"Number of sentences: {len(sent)}")
-
-
-# splitting the sentences above into two lists:
-sent_pos = []
-sent_neg = []
-
-# pattern to find the negation in a sentence
-neg_patt = r"\b[Nn]on\b"
-
-for s in sent:
-    matches = re.search(neg_patt, s)
-    if matches:
-        sent_neg.append(s)
-    else:
-        sent_pos.append(s)
-
-size_test = min(size_test, len(sent_neg), len(sent_pos))
-
-shuffle(sent_neg)
-shuffle(sent_pos)
-
-# select a fixed numb of sentences to test
-sent_neg = sent_neg[:size_test]
-sent_pos = sent_pos[:size_test]
-
-### extract CLS
-# for each set of sentences, we encode each sentence
-for sent_list in [sent_neg, sent_pos]:
-    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt")
-
-    # then extract only the outputs for each sentence
-    with torch.no_grad():
-        tokens_outputs = model(**batch_encoded)
-
-    # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
-    cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
-
-    cls_encodings = cls_encodings.cpu().numpy()
-
-    if sent_list == sent_neg:
-        cls_encodings_neg = cls_encodings
-    elif sent_list == sent_pos:
-        cls_encodings_pos = cls_encodings
-
-# train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
-# train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
-# train = train.append(cls_encodings_pos[:9000])
-
-# we use 90% of data as training and 10% as test
-train_size = round(size_test * 0.9)
-train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
-labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
-test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
-test_size = int(size_test - train_size)
-test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
-
-# data normalization
-scaler = StandardScaler()
-scaler.fit(train)
-dati_scaled = scaler.transform(train)
-
-X = dati_scaled
-test = scaler.transform(test)
-# print(test)
-# print(test_lab)
-
-y = labels
-
-
 
 ########################################
 ### classifier creation and training ###
