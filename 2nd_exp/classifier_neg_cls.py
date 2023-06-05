@@ -380,7 +380,7 @@ for sent in template_sentences_pos:
 # extract CLS for each template sentence
 # for each set of sentences, we encode each sentence
 for sent_list in [template_sentences_neg, template_sentences_pos]:
-    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt")
+    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
 
     # then extract only the outputs for each sentence
     with torch.no_grad():
