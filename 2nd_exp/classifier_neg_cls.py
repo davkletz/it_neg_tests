@@ -217,8 +217,8 @@ size_batch = 8
 
 ### extract CLS
 # for each set of sentences, we encode each sentence
-cls_encodings_neg = []
-cls_encodings_pos = []
+cls_encodings_neg = np.zeros((size_test, 768))
+cls_encodings_pos = np.zeros((size_test, 768))
 for sent_list in [sent_neg, sent_pos]:
     print(len(sent_list))
     nb_batch = len(sent_list) // size_batch
@@ -236,9 +236,9 @@ for sent_list in [sent_neg, sent_pos]:
         cls_encodings = cls_encodings.cpu().numpy()
 
         if sent_list == sent_neg:
-            cls_encodings_neg.append(cls_encodings)
+            cls_encodings_neg[k * size_batch:(k + 1) * size_batch] = cls_encodings
         elif sent_list == sent_pos:
-            cls_encodings_pos.append(cls_encodings)
+            cls_encodings_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
 
 # train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
 # train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
