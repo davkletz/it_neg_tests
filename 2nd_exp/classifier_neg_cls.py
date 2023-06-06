@@ -420,12 +420,45 @@ for sent_list in [template_sentences_neg, template_sentences_pos]:
 
         if sent_list == template_sentences_neg:
             #cls_temp_neg = cls_encodings
+            print("\n")
+            print(cls_encodings.shape)
+            print(cls_temp_neg.shape)
+            print(cls_temp_neg[k * size_batch:(k + 1) * size_batch].shape)
             cls_temp_neg[k * size_batch:(k + 1) * size_batch] = cls_encodings
 
 
         elif sent_list == template_sentences_pos:
             #cls_temp_pos = cls_encodings
             cls_temp_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
+
+
+    r_eq = len(sent_list) % size_batch
+    if  r_eq !=0:
+        current_batch = sent_list[nb_batch * size_batch:]
+        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
+                                                    return_tensors="pt").to(device)
+
+        # batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+
+        # then extract only the outputs for each sentence
+        with torch.no_grad():
+            tokens_outputs = model(**batch_encoded)
+
+        # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
+        cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+
+        cls_encodings = cls_encodings.cpu().numpy()
+
+        if sent_list == template_sentences_neg:
+            # cls_temp_neg = cls_encodings
+
+            cls_temp_neg[k * size_batch:(k + 1) * size_batch] = cls_encodings
+
+
+        elif sent_list == template_sentences_pos:
+            # cls_temp_pos = cls_encodings
+            cls_temp_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
+
 
 
 np.random.shuffle(cls_temp_neg)
