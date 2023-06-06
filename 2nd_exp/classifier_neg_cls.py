@@ -306,6 +306,8 @@ detail_verbs = {v: 0 for v in
 
 size_batches = 100
 
+nb_found_sentences = 0
+
 for gender in ["f", "m"]:
     current_pronouns_maj = pronouns_maj[gender]
 
@@ -313,7 +315,7 @@ for gender in ["f", "m"]:
         batch_sentences = []  # batch of sentences to try in this cycle
         batch_verbs = []  # batch of verbs to try in this cycle
 
-        if len(batch_sentences) > 100:
+        if nb_found_sentences > 100:
             break
 
         for profession_available in professionsarray[gender]:
@@ -354,6 +356,7 @@ for gender in ["f", "m"]:
                     batch_sentences = []
                     batch_verbs = []
                     for found_verb in found_verbs:
+                        nb_found_sentences += 1
                         detail_verbs[found_verb] += 1  # add one repetition to the count for the found verb
 
             # repetition for what is left out of the last batch
