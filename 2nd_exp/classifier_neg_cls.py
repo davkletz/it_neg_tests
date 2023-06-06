@@ -220,12 +220,12 @@ size_batch = 8
 cls_encodings_neg = np.zeros((size_test, 768))
 cls_encodings_pos = np.zeros((size_test, 768))
 for sent_list in [sent_neg, sent_pos]:
-    print(len(sent_list))
+    #print(len(sent_list))
     nb_batch = len(sent_list) // size_batch
     for k in range(nb_batch):
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
-        print(len(batch_encoded))
+        #print(len(batch_encoded))
 
         # then extract only the outputs for each sentence
         with torch.no_grad():
@@ -270,7 +270,7 @@ y = labels
 ###########################
 
 
-model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased')
+model_mask = AutoModelForMaskedLM.from_pretrained('dbmdz/bert-base-italian-cased').to(device)
 
 # load names, professions and verbs for the templates
 path = r"../Inputs"
