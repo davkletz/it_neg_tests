@@ -386,27 +386,43 @@ for sent in template_sentences_pos:
         sent_neg = re.sub(pair[0], pair[1], sent_neg)
     template_sentences_neg.append(sent_neg)
 
+
+
 # extract CLS for each template sentence
 # for each set of sentences, we encode each sentence
+
+cls_temp_neg = np.zeros((size_test, 768))
+cls_temp_pos = np.zeros((size_test, 768))
 for sent_list in [template_sentences_neg, template_sentences_pos]:
-    batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+    nb_batch = len(sent_list) // size_batch
+    for k in range(nb_batch):
+        current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
+        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
+                                                    return_tensors="pt").to(device)
 
-    # then extract only the outputs for each sentence
-    with torch.no_grad():
-        tokens_outputs = model(**batch_encoded)
+        #batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
 
-    # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
-    cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+        # then extract only the outputs for each sentence
+        with torch.no_grad():
+            tokens_outputs = model(**batch_encoded)
 
-    cls_encodings = cls_encodings.cpu().numpy()
+        # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
+        cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
-    if sent_list == template_sentences_neg:
-        cls_temp_neg = cls_encodings
-    elif sent_list == template_sentences_pos:
-        cls_temp_pos = cls_encodings
+        cls_encodings = cls_encodings.cpu().numpy()
 
-cls_temp_neg.shuffle()
-cls_temp_pos.shuffle()
+        if sent_list == template_sentences_neg:
+            #cls_temp_neg = cls_encodings
+            cls_temp_neg[k * size_batch:(k + 1) * size_batch] = cls_encodings
+
+
+        elif sent_list == template_sentences_pos:
+            #cls_temp_pos = cls_encodings
+            cls_temp_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
+
+
+np.shuffle(cls_temp_neg)
+np.shuffle(cls_temp_pos)
 
 cls_temp_pos = cls_temp_pos[:size_test]
 cls_temp_neg = cls_temp_neg[:size_test]
