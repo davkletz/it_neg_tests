@@ -312,6 +312,9 @@ for gender in ["f", "m"]:
         batch_sentences = []  # batch of sentences to try in this cycle
         batch_verbs = []  # batch of verbs to try in this cycle
 
+        if len(batch_sentences) > 100:
+            break
+
         for profession_available in professionsarray[gender]:
 
             current_list_verbs = list_verbs.copy()
