@@ -315,8 +315,7 @@ for gender in ["f", "m"]:
         batch_sentences = []  # batch of sentences to try in this cycle
         batch_verbs = []  # batch of verbs to try in this cycle
 
-        if nb_found_sentences > 100:
-            break
+        
 
         for profession_available in professionsarray[gender]:
 
