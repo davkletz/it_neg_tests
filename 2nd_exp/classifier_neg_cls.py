@@ -315,7 +315,7 @@ for gender in ["f", "m"]:
         batch_sentences = []  # batch of sentences to try in this cycle
         batch_verbs = []  # batch of verbs to try in this cycle
 
-        
+
 
         for profession_available in professionsarray[gender]:
 
