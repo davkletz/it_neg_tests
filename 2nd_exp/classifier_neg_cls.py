@@ -225,6 +225,7 @@ for sent_list in [sent_neg, sent_pos]:
     for k in range(nb_batch):
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+        print(len(batch_encoded))
 
         # then extract only the outputs for each sentence
         with torch.no_grad():
