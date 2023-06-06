@@ -242,6 +242,26 @@ for sent_list in [sent_neg, sent_pos]:
         elif sent_list == sent_pos:
             cls_encodings_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
 
+
+    if len(sent_list) % size_batch != 0:
+        current_batch = sent_list[nb_batch * size_batch:]
+        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+        #print(len(batch_encoded))
+
+        # then extract only the outputs for each sentence
+        with torch.no_grad():
+            tokens_outputs = model(**batch_encoded)
+
+        # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
+        cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+
+        cls_encodings = cls_encodings.cpu().numpy()
+
+        if sent_list == sent_neg:
+            cls_encodings_neg[nb_batch * size_batch:] = cls_encodings
+        elif sent_list == sent_pos:
+            cls_encodings_pos[nb_batch * size_batch:] = cls_encodings
+
 # train = torch.zeros(cls_encodings_neg.shape[0]*2, cls_encodings_neg.shape[1])
 # train[cls_encodings_neg.shape[0]] = cls_encodings_neg[:9000]
 # train = train.append(cls_encodings_pos[:9000])
