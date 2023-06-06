@@ -220,6 +220,7 @@ size_batch = 8
 cls_encodings_neg = np.zeros((size_test, 768))
 cls_encodings_pos = np.zeros((size_test, 768))
 for sent_list in [sent_neg, sent_pos]:
+
     #print(len(sent_list))
     nb_batch = len(sent_list) // size_batch
     for k in range(nb_batch):
@@ -399,6 +400,7 @@ cls_temp_pos = np.zeros((size_test, 768))
 for sent_list in [template_sentences_neg, template_sentences_pos]:
     nb_batch = len(sent_list) // size_batch
     for k in range(nb_batch):
+        print(f"currnet k : {k}")
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
                                                     return_tensors="pt").to(device)
