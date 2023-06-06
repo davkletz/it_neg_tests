@@ -429,8 +429,8 @@ for sent_list in [template_sentences_neg, template_sentences_pos]:
             cls_temp_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
 
 
-np.shuffle(cls_temp_neg)
-np.shuffle(cls_temp_pos)
+np.random.shuffle(cls_temp_neg)
+np.random.shuffle(cls_temp_pos)
 
 cls_temp_pos = cls_temp_pos[:size_test]
 cls_temp_neg = cls_temp_neg[:size_test]
