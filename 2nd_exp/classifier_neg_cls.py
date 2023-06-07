@@ -417,10 +417,11 @@ for sent in template_sentences_pos:
 # extract CLS for each template sentence
 # for each set of sentences, we encode each sentence
 
-cls_temp_neg = np.zeros((size_test, 768))
-cls_temp_pos = np.zeros((size_test, 768))
+cls_temp_neg = np.zeros((len(template_sentences_neg), 768))
+cls_temp_pos = np.zeros((len(template_sentences_pos), 768))
 for sent_list in [template_sentences_neg, template_sentences_pos]:
     nb_batch = len(sent_list) // size_batch
+    print(len)
     for k in range(nb_batch):
         print(f"currnet k : {k}")
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
