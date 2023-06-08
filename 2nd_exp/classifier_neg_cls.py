@@ -533,6 +533,10 @@ for hl in [(40, 40), (350, 350)]:
             right_pred_2 = clf.score(test_2, test_temp_lab)
             template_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_2}%\n\n")
 
+            print(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_2}%\n\n")
+
+            print("\n###")
+
 print("PAISA' TEST\n\n")
 for scores in paisa_result:
     print(scores)
