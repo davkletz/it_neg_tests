@@ -524,13 +524,14 @@ for hl in [(40, 40), (350, 350)]:
             clf.fit(X, y)
 
             # see predictions on the dataset
-            clf.predict(test)
-            right_pred = clf.score(test, test_lab)
-            paisa_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred}%\n\n")
+            clf.predict(test)#PAISA
+            right_pred_1 = clf.score(test, test_lab)
+            print(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_1}%\n\n")
+            paisa_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_1}%\n\n")
 
-            clf.predict(test_2)
-            right_pred = clf.score(test_2, test_temp_lab)
-            template_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred}%\n\n")
+            clf.predict(test_2)#patterns
+            right_pred_2 = clf.score(test_2, test_temp_lab)
+            template_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_2}%\n\n")
 
 print("PAISA' TEST\n\n")
 for scores in paisa_result:
