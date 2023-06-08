@@ -423,7 +423,7 @@ for sent_list in [template_sentences_neg, template_sentences_pos]:
     nb_batch = len(sent_list) // size_batch
     print(len)
     for k in range(nb_batch):
-        print(f"currnet k : {k}")
+        #print(f"currnet k : {k}")
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
                                                     return_tensors="pt").to(device)
