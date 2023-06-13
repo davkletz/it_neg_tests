@@ -504,13 +504,17 @@ cls_temp_neg = cls_temp_neg[:size_test]
 ############################
 
 
-train_temp = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]))
+'''train_temp = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]))
 train_temp_lab = np.concatenate((np.zeros(train_size), np.ones(train_size)))
 test_temp = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]))
 test_temp_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
+'''
+test_temp = np.concatenate((cls_temp_pos[:], cls_temp_neg[:]))
+test_temp_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 
-scaler.fit(train_temp)
-train = scaler.transform(train_temp)
+
+scaler.fit(test_temp)
+#train = scaler.transform(train_temp)
 test_2 = scaler.transform(test_temp)
 
 ########################################
