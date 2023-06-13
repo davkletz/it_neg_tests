@@ -219,7 +219,7 @@ shuffle(sent_pos)
 sent_neg = sent_neg[:size_test]
 sent_pos = sent_pos[:size_test]
 
-size_batch = 8
+size_batch = 4
 
 ### extract CLS
 # for each set of sentences, we encode each sentence
