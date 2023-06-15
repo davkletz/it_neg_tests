@@ -496,8 +496,13 @@ for sent_list in [template_sentences_neg, template_sentences_pos]:
 np.random.shuffle(cls_temp_neg)
 np.random.shuffle(cls_temp_pos)
 
-cls_temp_pos = cls_temp_pos[:size_test]
-cls_temp_neg = cls_temp_neg[:size_test]
+print(f"SIZE : {len(template_sentences_pos)}")
+
+
+current_size = min(len(cls_temp_pos), len(cls_temp_neg))
+
+cls_temp_pos = cls_temp_pos[:current_size]
+cls_temp_neg = cls_temp_neg[:current_size]
 
 ############################
 ### masked template test ###
@@ -510,7 +515,7 @@ test_temp = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[tr
 test_temp_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
 '''
 test_temp = np.concatenate((cls_temp_pos[:], cls_temp_neg[:]))
-test_temp_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
+test_temp_lab = np.concatenate((np.zeros(current_size), np.ones(current_size)))
 
 
 scaler.fit(test_temp)
