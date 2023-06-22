@@ -1,8 +1,9 @@
-with open(r"paisa.raw.utf8", encoding='utf8') as infile:
-    
-    paisa = infile.read()
-
 import re
+
+with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
+  paisa = infile.read()
+
+
 
 wiki_pattern = r"<text.*wiki.*(?:\n.*)+?\n</text>\n" # finds all texts containing "wiki" in their tag's url
 
