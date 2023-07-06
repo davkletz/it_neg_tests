@@ -49,24 +49,34 @@ Cn_patt = r"\b[Nn]on\b.*\..*\."  # finds the negation in a sentence
 Tn_patt = r"\..*\b[Nn]on\b.*\."  # finds the negation in a sentence
 
 
+Cn = []
+CpTp = []
+CpTn = []
+
 
 for s in sent:
   matches1 = re.search(Cn_patt, s)
   if matches1:
-    sent_CnTp.append(s)
+    Cn.append(s)
   else:
     matches2 = re.search(Tn_patt, s)
     if matches2:
-       sent_CpTn.append(s)
+       CpTn.append(s)
+    else:
+        CpTp.append(s)
 
+
+CnTp = []
+CnTn = []
 for elem in sent_CnTp:
-  double_neg = re.search(Tn_patt, elem)
-  if double_neg:
-    sent_CnTp.remove(elem)
+    double_neg = re.search(Tn_patt, elem)
+    if double_neg:
+        CnTn.append(elem)
+    else:
+        CnTp.append(elem)
 
 
-
-print(f"Number of sent_CnTp sentences : {len(sent_CnTp)}\n\nNumber of sent_CpTn sentences : {len(sent_CpTn)}")
+print(f"Number of sent_CnTp sentences : {len(sent_CnTp)} \n\nNumber of CpTn sentences : {len(CpTn)}\n\nNumber of CnTp sentences : {len(CnTp)}\n\nNumber of CnTn sentences : {len(CnTn)}\n\n")
 
 
 shuffle(sent_CnTp)
