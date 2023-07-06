@@ -24,6 +24,8 @@ sent = []
 
 
 for text in paisa_wiki:
+    if i%100 == 0:
+        print(f"Text number {i}, {len(sent)} sentences found")
     tokens = nltk.sent_tokenize(text)
 
     for element in range(len(tokens)-1):
