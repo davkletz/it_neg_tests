@@ -185,7 +185,14 @@ paisa_wiki = re.findall(wiki_pattern, paisa)
 sent = []
 pattern = r" [A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b"  # finds kind of acceptable sentences
 
+i = 0
+
+print(f"nb files : {len(paisa_wiki)}")
+
 for text in paisa_wiki:
+    i += 1
+    if i%100 == 0:
+        print(i)
     found = re.findall(pattern, text)
     for elem in found:
         if len(elem) > 25:
