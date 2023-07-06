@@ -17,6 +17,7 @@ pattern = r"(?<= )[A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b[A-Z][a-z ]
 
 
 i = 0
+print(len(paisa_wiki))
 for text in paisa_wiki:
   if i%100 == 0:
     print(f"Text number {i}")
