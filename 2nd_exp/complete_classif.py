@@ -234,7 +234,6 @@ shuffle(paisa_wiki)
 
 
 
-sent = []
 
 
 
@@ -260,7 +259,7 @@ for text in paisa_wiki:
 
 
     if i%100 == 0:
-        print(f"Text number {i}, {len(sent)} sentences found")
+        print(f"Text number {i}, {len(CpTn)} CpTn found")
     i += 1
     tokens = nltk.sent_tokenize(text)
 
@@ -434,9 +433,6 @@ for gender in ["f", "m"]:
 
     for name_available in name_arrays[gender]:
         batch_CpTp = []  # batch of CpTp to try in this cycle
-        batch_CpTn = []  # batch of CpTn to try in this cycle
-        batch_CnTp = []
-        batch_CnTn = []
 
         batch_verbs = []  # batch of verbs to try in this cycle
 
@@ -468,6 +464,8 @@ for gender in ["f", "m"]:
 
                 # get the result at the end of the batch
                 if len(batch_CpTp) == size_batches:
+                    print(len(batch_CpTp))
+                    print(len(batch_verbs))
                     new_sentence, found, nb_good_pred, found_verbs = make_and_encode_batch(batch_CpTp, tokenizer,
                                                                                            model_mask, device,
                                                                                            batch_verbs, name_available,
@@ -479,9 +477,6 @@ for gender in ["f", "m"]:
                     if new_sentence != None:
                         list_good_patterns_model.append(new_sentence)
                     batch_CpTp = []
-                    batch_CpTn = []
-                    batch_CnTp = []
-                    batch_CnTn = []
                     batch_verbs = []
                     for found_verb in found_verbs:
                         nb_found_sentences += 1
