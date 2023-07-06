@@ -5,6 +5,11 @@ import nltk
 seed(42)
 
 
+
+nb_sents_to_catch = 5000
+
+
+
 with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
   paisa = infile.read()
 
@@ -20,10 +25,8 @@ print(f"Number of texts from a site containing 'wiki' in their URL: {len(paisa_w
 i = 0
 print(len(paisa_wiki))
 shuffle(paisa_wiki)
-paisa_wiki = paisa_wiki[:5000]
 
 
-nb_sents_to_catch = 5000
 
 sent = []
 
@@ -40,6 +43,8 @@ CpTn = []
 
 CnTp = []
 CnTn = []
+
+shuffle(paisa_wiki)
 
 
 for text in paisa_wiki:
