@@ -25,7 +25,6 @@ sent = []
 
 for text in paisa_wiki:
     tokens = nltk.sent_tokenize(text)
-    print(len(tokens))
 
     for element in range(len(tokens)-1):
         sent.append(tokens[element] + " " + tokens[element+1])
