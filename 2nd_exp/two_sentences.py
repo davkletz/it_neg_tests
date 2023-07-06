@@ -42,9 +42,6 @@ print(f"Number of sentences: {len(sent)}")
 
 
 
-sent_CpTn = []
-sent_CnTp = []
-
 Cn_patt = r"\b[Nn]on\b.*\..*\."  # finds the negation in a sentence
 Tn_patt = r"\..*\b[Nn]on\b.*\."  # finds the negation in a sentence
 
@@ -76,20 +73,32 @@ for elem in Cn:
         CnTp.append(elem)
 
 
-print(f"Number of sent_CnTp sentences : {len(sent_CnTp)} \n\nNumber of CpTn sentences : {len(CpTn)}\n\nNumber of CnTp sentences : {len(CnTp)}\n\nNumber of CnTn sentences : {len(CnTn)}\n\n")
+print(f"Number of sent_CnTp sentences : {len(CnTp)} \n\nNumber of CpTn sentences : {len(CpTn)}\n\nNumber of CnTp sentences : {len(CnTp)}\n\nNumber of CnTn sentences : {len(CnTn)}\n\n")
 
 
-shuffle(sent_CnTp)
-
-for k in range(10):
-    print("\n")
-    print(sent_CnTp[k])
-
-shuffle(sent_CpTn)
+shuffle(CnTp)
 
 for k in range(10):
     print("\n")
-    print(sent_CpTn[k])
+    print(CnTp[k])
+
+shuffle(CpTn)
+
+for k in range(10):
+    print("\n")
+    print(CpTn[k])
+
+shuffle(CnTn)
+
+for k in range(10):
+    print("\n")
+    print(CnTn[k])
+
+shuffle(CpTp)
+
+for k in range(10):
+    print("\n")
+    print(CpTp[k])
 
 
 
