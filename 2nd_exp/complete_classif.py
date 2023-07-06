@@ -464,8 +464,8 @@ for gender in ["f", "m"]:
 
                 # get the result at the end of the batch
                 if len(batch_CpTp) == size_batches:
-                    print(len(batch_CpTp))
-                    print(len(batch_verbs))
+                    #print(len(batch_CpTp))
+                    #print(len(batch_verbs))
                     new_sentence, found, nb_good_pred, found_verbs = make_and_encode_batch(batch_CpTp, tokenizer,
                                                                                            model_mask, device,
                                                                                            batch_verbs, name_available,
@@ -495,6 +495,7 @@ for gender in ["f", "m"]:
                     list_good_patterns_model.append(new_sentence)
 
                 batch_verbs = []
+                batch_CpTp = []
                 for found_verb in found_verbs:
                     detail_verbs[found_verb] += 1
 
