@@ -66,6 +66,8 @@ for elem in sent_CnTp:
 
 
 
+print(f"Number of sent_CnTp sentences : {len(sent_CnTp)}\n\nNumber of sent_CpTn sentences : {len(sent_CpTn)}")
+
 
 
 
