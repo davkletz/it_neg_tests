@@ -24,16 +24,14 @@ sent = []
 
 
 for text in paisa_wiki:
-    if i%100 == 0:
-        print(f"Text number {i}, {len(sent)} sentences found")
+    
     i += 1
     tokens = nltk.sent_tokenize(text)
 
     for element in range(len(tokens)-1):
         new_sent = tokens[element] + " " + tokens[element+1]
 
-        if i<=5:
-            print(new_sent)
+
         if len(new_sent) > 25 and not "\n" in new_sent:
             sent.append(new_sent)
 
