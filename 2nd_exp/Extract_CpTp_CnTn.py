@@ -20,11 +20,11 @@ pattern = r"(?<= )[A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b[A-Z][a-z ]
 i = 0
 print(len(paisa_wiki))
 shuffle(paisa_wiki)
-paisa_wiki = paisa_wiki[:100]
+#paisa_wiki = paisa_wiki[:100]
 
 for text in paisa_wiki:
   if i%100 == 0:
-    print(f"Text number {i}")
+    print(f"Text number {i}, {len(sent)} sentences found")
   i += 1
   found = re.findall(pattern, text)
   for elem in  found:
