@@ -68,7 +68,7 @@ for s in sent:
 
 CnTp = []
 CnTn = []
-for elem in sent_CnTp:
+for elem in Cn:
     double_neg = re.search(Tn_patt, elem)
     if double_neg:
         CnTn.append(elem)
