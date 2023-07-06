@@ -69,5 +69,17 @@ for elem in sent_CnTp:
 print(f"Number of sent_CnTp sentences : {len(sent_CnTp)}\n\nNumber of sent_CpTn sentences : {len(sent_CpTn)}")
 
 
+shuffle(sent_CnTp)
+
+for k in range(10):
+    print("\n")
+    print(sent_CnTp[k])
+
+shuffle(sent_CpTn)
+
+for k in range(10):
+    print("\n")
+    print(sent_CpTn[k])
+
 
 
