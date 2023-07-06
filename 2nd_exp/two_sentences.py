@@ -34,7 +34,7 @@ for text in paisa_wiki:
 
         if i<=5:
             print(new_sent)
-        if len(new_sent) > 25:
+        if len(new_sent) > 25 and not "\n" in new_sent:
             sent.append(new_sent)
 
 print(f"Number of sentences: {len(sent)}")
@@ -78,11 +78,16 @@ print(f"Number of sent_CnTp sentences : {len(CnTp)} \n\nNumber of CpTn sentences
 
 shuffle(CnTp)
 
+
+print("\n\n######\n\n")
 for k in range(10):
     print("\n")
     print(CnTp[k])
 
 shuffle(CpTn)
+
+
+print("\n\n######\n\n")
 
 for k in range(10):
     print("\n")
@@ -90,12 +95,14 @@ for k in range(10):
 
 shuffle(CnTn)
 
+print("\n\n######\n\n")
 for k in range(10):
     print("\n")
     print(CnTn[k])
 
 shuffle(CpTp)
 
+print("\n\n######\n\n")
 for k in range(10):
     print("\n")
     print(CpTp[k])
