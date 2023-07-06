@@ -16,8 +16,11 @@ sent = []
 pattern = r"(?<= )[A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b[A-Z][a-z ]*[,:]?[a-z ]+[,:]?[a-z ][,:]?[a-z]+\. \b"  # finds series of two sentences
 
 
-
+i = 0
 for text in paisa_wiki:
+  if i%100 == 0:
+    print(f"Text number {i}")
+  i += 1
   found = re.findall(pattern, text)
   for elem in  found:
     if len(elem) > 25:
