@@ -233,7 +233,7 @@ print(len(paisa_wiki))
 shuffle(paisa_wiki)
 
 
-
+paisa_wiki = paisa_wiki[:1000]
 
 
 
@@ -533,7 +533,7 @@ cls_temp_CpTp = np.zeros((len(template_sentences_CpTp), 768))
 cls_temp_CpTn = np.zeros((len(template_sentences_CpTn), 768))
 cls_temp_CnTp = np.zeros((len(template_sentences_CnTp), 768))
 
-template_sentences = {"CpTp" :template_sentences_CpTp, "CpTn" : template_sentences_CpTn, "CnTp" : template_sentences_CnTp, "CnTn" : template_sentences_CnTn }
+template_sentences = {"CpTp" : template_sentences_CpTp, "CpTn" : template_sentences_CpTn, "CnTp" : template_sentences_CnTp, "CnTn" : template_sentences_CnTn }
 
 cls_temps = {}
 
@@ -584,6 +584,8 @@ for construction in template_sentences:
 
 
 
+print(f"details : {cls_temps.keys()}")
+
 for construction in cls_temps:
 
     np.random.shuffle(cls_temps[construction])
@@ -602,6 +604,7 @@ for construction in cls_temps:
 
 
 
+print(f"details : {cls_temps.keys()}")
 
 
 ############################
