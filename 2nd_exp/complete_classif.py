@@ -428,6 +428,10 @@ size_batches = 100
 
 nb_found_sentences = 0
 
+
+nb_max_patterns = 100
+
+
 for gender in ["f", "m"]:
     current_pronouns_maj = pronouns_maj[gender]
 
@@ -438,6 +442,9 @@ for gender in ["f", "m"]:
 
 
         for profession_available in professionsarray[gender]:
+
+            if len(list_good_patterns_model)>=nb_max_patterns:
+                break
 
             current_list_verbs = list_verbs.copy()
             shuffle(current_list_verbs)
