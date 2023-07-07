@@ -215,6 +215,7 @@ tokenizer = AutoTokenizer.from_pretrained('dbmdz/bert-base-italian-cased')
 
 
 
+
 with open(r"../data/paisa.raw.utf8", encoding='utf8') as infile:
   paisa = infile.read()
 
@@ -286,27 +287,37 @@ for text in paisa_wiki:
 
 
 
-sent_neg = CnTn + CnTp + CpTn
-sent_pos = CpTp
 
-shuffle(sent_neg)
-shuffle(sent_pos)
+shuffle(CnTn)
+shuffle(CnTp)
+shuffle(CpTn)
+shuffle(CpTp)
 
-size_test = min(size_test, len(sent_neg), len(sent_pos))
+size_test = min(size_test, len(CnTn), len(CnTp), len(CpTn), len(CpTp))
 
 # select a fixed numb of sentences to test
-sent_neg = sent_neg[:size_test]
-sent_pos = sent_pos[:size_test]
+CpTp = CpTp[:size_test]
+CpTn = CpTn[:size_test]
+CnTp = CnTp[:size_test]
+CnTn = CnTn[:size_test]
+
 
 size_batch = 4
 
 ### extract CLS
 # for each set of sentences, we encode each sentence
-cls_encodings_neg = np.zeros((size_test, 768))
-cls_encodings_pos = np.zeros((size_test, 768))
+CnTn_cls_encodings = np.zeros((size_test, 768))
+CnTp_cls_encodings = np.zeros((size_test, 768))
+CpTn_cls_encodings = np.zeros((size_test, 768))
+CpTp_cls_encodings = np.zeros((size_test, 768))
 
-for sent_list in [sent_neg, sent_pos]:
+cls_encodings = {}
 
+sentences_list = {"CpTp": CpTp, "CnTp": CnTp, "CpTn": CpTn, "CnTn": CnTn}
+
+
+for construction in sentences_list:
+    sent_list = sentences_list[construction]
     #print(len(sent_list))
     nb_batch = len(sent_list) // size_batch
     for k in range(nb_batch):
@@ -319,17 +330,12 @@ for sent_list in [sent_neg, sent_pos]:
         with torch.no_grad():
             tokens_outputs = model(**batch_encoded)
 
-
-
         # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
         cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
         cls_encodings = cls_encodings.cpu().numpy()
 
-        if sent_list == sent_neg:
-            cls_encodings_neg[k * size_batch:(k + 1) * size_batch] = cls_encodings
-        elif sent_list == sent_pos:
-            cls_encodings_pos[k * size_batch:(k + 1) * size_batch] = cls_encodings
+        cls_encodings[construction][k * size_batch:(k + 1) * size_batch] = cls_encodings
 
 
     if len(sent_list) % size_batch != 0:
@@ -346,19 +352,17 @@ for sent_list in [sent_neg, sent_pos]:
 
         cls_encodings = cls_encodings.cpu().numpy()
 
-        if sent_list == sent_neg:
-            cls_encodings_neg[nb_batch * size_batch:] = cls_encodings
-        elif sent_list == sent_pos:
-            cls_encodings_pos[nb_batch * size_batch:] = cls_encodings
+        cls_encodings[construction][nb_batch * size_batch] = cls_encodings
 
 
 # we use 90% of data as training and 10% as test
 train_size = round(size_test * 0.9)
-train = np.concatenate((cls_encodings_pos[:train_size], cls_encodings_neg[:train_size]), 0)
-labels = np.concatenate((np.zeros(train_size), np.ones(train_size)))
-test = np.concatenate((cls_encodings_pos[train_size:], cls_encodings_neg[train_size:]), 0)
+train = np.concatenate((cls_encodings["CpTp"][:train_size], cls_encodings["CpTn"][:train_size], cls_encodings["CnTp"][:train_size], cls_encodings["CnTn"][:train_size]), 0)
+labels = np.concatenate((np.zeros(train_size), np.ones(train_size), np.full(train_size, 2), np.full(train_size, 3)))
+
+test = np.concatenate((cls_encodings["CpTp"][train_size:], cls_encodings["CpTn"][train_size:], cls_encodings["CnTp"][train_size:], cls_encodings["CnTn"][train_size:]), 0)
 test_size = int(size_test - train_size)
-test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size)))
+test_lab = np.concatenate((np.zeros(test_size), np.ones(test_size), np.full(test_size, 2), np.full(test_size, 3)))
 
 # data normalization
 scaler = StandardScaler()
@@ -367,8 +371,7 @@ dati_scaled = scaler.transform(train)
 
 X = dati_scaled
 test = scaler.transform(test)
-# print(test)
-# print(test_lab)
+
 
 y = labels
 
@@ -623,7 +626,7 @@ print(f"details : {cls_temps.keys()}")
 
 
 test_temp = np.concatenate((cls_temps["CpTp"], cls_temps["CpTn"], cls_temps["CnTp"], cls_temps["CnTn"]))
-test_temp_lab = np.concatenate((np.zeros(current_size), np.ones(current_size),  np.ones(current_size),  np.ones(current_size)))
+test_temp_lab = np.concatenate((np.zeros(current_size), np.ones(current_size), np.full(current_size, 2), np.full(current_size, 3)))
 
 
 scaler.fit(test_temp)
