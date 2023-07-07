@@ -548,7 +548,7 @@ for construction in template_sentences:
     sent_list = template_sentences[construction]
     current_cls_temps = np.zeros((len(template_sentences_CpTn), 768))
     nb_batch = len(sent_list) // size_batch
-    print(len)
+    print(nb_batch)
     for k in range(nb_batch):
         #print(f"currnet k : {k}")
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
@@ -587,7 +587,9 @@ for construction in template_sentences:
 
         cls_encodings = cls_encodings.cpu().numpy()
 
-        cls_temps[construction] = current_cls_temps
+        current_cls_temps[nb_batch * size_batch:] = cls_encodings
+
+    cls_temps[construction] = current_cls_temps
 
 
 
