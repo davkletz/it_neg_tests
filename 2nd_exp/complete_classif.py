@@ -233,7 +233,7 @@ print(len(paisa_wiki))
 shuffle(paisa_wiki)
 
 
-paisa_wiki = paisa_wiki[:1000]
+#paisa_wiki = paisa_wiki[:1000]
 
 
 
@@ -429,7 +429,7 @@ size_batches = 100
 nb_found_sentences = 0
 
 
-nb_max_patterns = 100
+nb_max_patterns = None
 
 
 for gender in ["f", "m"]:
@@ -443,8 +443,9 @@ for gender in ["f", "m"]:
 
         for profession_available in professionsarray[gender]:
 
-            if len(list_good_patterns_model)>=nb_max_patterns:
-                break
+            if nb_max_patterns is not None:
+                if len(list_good_patterns_model)>=nb_max_patterns:
+                    break
 
             current_list_verbs = list_verbs.copy()
             shuffle(current_list_verbs)
@@ -658,16 +659,13 @@ for hl in [(40, 40), (350, 350)]:
             # see predictions on the dataset
             clf.predict(test)#PAISA
             right_pred_1 = clf.score(test, test_lab)
-            print("#### TEST 1 :\n\n")
-            print(test[:10])
 
             print("#### TEST 1 :\n\n")
             print(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_1}%\n\n")
             paisa_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_1}%\n\n")
 
             clf.predict(test_2)#patterns
-            print("#### TEST 2 :\n\n")
-            print(test_2[:10])
+
             print("#### TEST 2 :\n\n")
             right_pred_2 = clf.score(test_2, test_temp_lab)
             template_result.append(f"Method: {solv}\tNb hidden layers: {str(hl)}\tAlpha: {str(a)}\n {right_pred_2}%\n\n")
@@ -683,3 +681,8 @@ for scores in paisa_result:
 print("TEMPLATE TEST\n\n")
 for scores in template_result:
     print(scores)
+
+
+
+dump(paisa_result, "paisa_result.joblib")
+dump(template_result, "template_result.joblib")
