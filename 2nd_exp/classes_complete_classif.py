@@ -331,11 +331,11 @@ for construction in sentences_list:
             tokens_outputs = model(**batch_encoded)
 
         # for each set of outputs we only keep the one of the CLS token, namely the first token of each sentence
-        cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
+        currn_cls_encodings = tokens_outputs.last_hidden_state[:, 0, :]
 
-        cls_encodings = cls_encodings.cpu().numpy()
+        currn_cls_encodings = currn_cls_encodings.cpu().numpy()
 
-        cls_encodings[construction][k * size_batch:(k + 1) * size_batch] = cls_encodings
+        cls_encodings[construction][k * size_batch:(k + 1) * size_batch] = currn_cls_encodings
 
 
     if len(sent_list) % size_batch != 0:
