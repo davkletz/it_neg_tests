@@ -322,7 +322,7 @@ for construction in sentences_list:
     nb_batch = len(sent_list) // size_batch
     for k in range(nb_batch):
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
-        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt")
+        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt", max_length=512, truncation=True)
         batch_encoded = batch_encoded.to(device)
         #print(len(batch_encoded))
 
@@ -340,7 +340,7 @@ for construction in sentences_list:
 
     if len(sent_list) % size_batch != 0:
         current_batch = sent_list[nb_batch * size_batch:]
-        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
+        batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True, return_tensors="pt", max_length=512, truncation=True).to(device)
         #print(len(batch_encoded))
 
         # then extract only the outputs for each sentence
@@ -557,7 +557,7 @@ for construction in template_sentences:
         #print(f"currnet k : {k}")
         current_batch = sent_list[k * size_batch:(k + 1) * size_batch]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
-                                                    return_tensors="pt").to(device)
+                                                    return_tensors="pt", max_length=512, truncation=True).to(device)
 
         #batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
 
@@ -578,7 +578,7 @@ for construction in template_sentences:
     if  r_eq !=0:
         current_batch = sent_list[nb_batch * size_batch:]
         batch_encoded = tokenizer.batch_encode_plus(current_batch, padding=True, add_special_tokens=True,
-                                                    return_tensors="pt").to(device)
+                                                    return_tensors="pt", max_length=512, truncation=True).to(device)
 
         # batch_encoded = tokenizer.batch_encode_plus(sent_list, padding=True, add_special_tokens=True, return_tensors="pt").to(device)
 
