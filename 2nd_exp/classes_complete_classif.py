@@ -311,10 +311,10 @@ CnTp_cls_encodings = np.zeros((size_test, 768))
 CpTn_cls_encodings = np.zeros((size_test, 768))
 CpTp_cls_encodings = np.zeros((size_test, 768))
 
-cls_encodings = {}
 
 sentences_list = {"CpTp": CpTp, "CnTp": CnTp, "CpTn": CpTn, "CnTn": CnTn}
 
+cls_encodings = {k : np.zeros((size_test, 768)) for k in sentences_list.keys()}
 
 for construction in sentences_list:
     sent_list = sentences_list[construction]
